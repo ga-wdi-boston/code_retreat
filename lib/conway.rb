@@ -14,17 +14,26 @@ module Game
     end
 
     def initial_populate
-      board_array.map! { |index| @board_array[index] = rand.round }
+      @board_array.map! { |index| @board_array[index] = rand.round }
       print_board(@board_array, 0)
     end
 
+    # def tick(iterator)
+    #   tmp = @board_array
+    #   tmp.map!.with_index do |_object, index|
+    #     update(index)
+    #   end
+    #   @board_array = tmp
+    #   print_board(@board_array, iterator)
+    # end
+
     def tick(iterator)
-      tmp = board_array
-      tmp.map!.with_index do |_object, index|
-        update(index)
+      tmp = @board_array
+      @board_array.each_index do |index|
+        tmp[index] = update(index)
       end
-      board_array = tmp
-      print_board(board_array, iterator)
+      @board_array = tmp
+      print_board(@board_array, iterator)
     end
 
     def top_count(index)
@@ -75,13 +84,13 @@ module Game
         row = board_array.slice(counter, width)
         rows.push(row)
       end
-      p iterator
+      p "Step: #{iterator}:"
       rows.each { |row_of_grid| p row_of_grid }
     end
   end
 end
 
 # tests
-sample_game = Game::Board.new(5, 5)
+sample_game = Game::Board.new(4, 4)
 counter = 1.upto(4)
 counter.each { |iterator| sample_game.tick(iterator) }
