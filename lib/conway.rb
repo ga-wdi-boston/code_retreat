@@ -77,11 +77,11 @@ module Game
       live_or_die(@board_array[index], neighbors_count(index))
     end
 
-    def print_board(board_array, iterator)
+    def print_board(board, iterator)
       rows = []
       row_counter = 0.upto(length - 1)
       row_counter.each do |counter|
-        row = board_array.slice(counter, width)
+        row = board.slice(counter, width)
         rows.push(row)
       end
       p "Step: #{iterator}:"
@@ -91,6 +91,6 @@ module Game
 end
 
 # tests
-sample_game = Game::Board.new(4, 4)
+sample_game = Game::Board.new(5, 5)
 counter = 1.upto(4)
 counter.each { |iterator| sample_game.tick(iterator) }
