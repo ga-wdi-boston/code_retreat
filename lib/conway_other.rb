@@ -23,9 +23,6 @@ module Game
       end
     end
 
-    def tick
-    end
-
     def build_neighbors_array(array, index)
       neighbors_array = []
       neighbors_array.push(array[index - @width - 1])
@@ -36,7 +33,7 @@ module Game
       neighbors_array.push(array[index + @width - 1])
       neighbors_array.push(array[index + @width])
       neighbors_array.push(array[index + @width + 1])
-      neighbors_array.compact
+      neighbors_array.compact!
     end
 
     def create_sum(neighbors_array)
@@ -44,16 +41,10 @@ module Game
     end
 
     def live_or_die(status, sum)
-      if status == 0
-        if sum == 3
-          1
-        end
+      if (status == 0 && sum == 3) || (status == 1 && (sum == 2 || sum == 3))
+        1
       else
-        if sum == 2 || sum == 3
-          1
-        else
-          0
-        end
+        0
       end
     end
   end
