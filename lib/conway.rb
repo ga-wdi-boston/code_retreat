@@ -14,22 +14,46 @@ module Game
     end
 
     def initial_populate
-      board_array.map! { |index| board_array[index] = rand.round }
-      print_board(board_array, 0)
+      board_array.map! { |index| @board_array[index] = rand.round }
+      print_board(@board_array, 0)
     end
 
     def tick(iterator)
       tmp = board_array
-      tmp.map! { |index| tmp[index] = update(index, board_array) }
+      tmp.map!.with_index do |_object, index|
+        update(index)
+      end
       board_array = tmp
       print_board(board_array, iterator)
     end
 
+    def top_count(index)
+      @board_array.slice(index - @width - 1, 3).compact.reduce(:+)
+    end
+
+    def get_neighbors_indices(index)
+      [index - @width - 1, index - @width, index - @width + 1,
+       index - 1, index + 1,
+       index + @width - 1, index + @width, index + @width + 1]
+    end
+
+    def filter_neighbor_indices(indices_array)
+      indices_array.keep_if { |index| index > 0 && index <= @cell_count }
+    end
+
+    def finalize_neighbors(final_cell_indices)
+      final_cells = []
+      final_cell_indices.each do |index|
+        final_cells.push(@board_array[index])
+      end
+      final_cells
+    end
+
     def neighbors_count(index)
-      @board_array.slice(index - @width - 1, 3).reduce(:+) +
-        @board_array[index - 1] +
-        @board_array[index + 1] +
-        @board_array.slice(index + @width - 1, 3).reduce(:+)
+      cell_indices = get_neighbors_indices(index)
+      final_cell_indices = filter_neighbor_indices(cell_indices)
+      final_cells_array = finalize_neighbors(final_cell_indices)
+      final_cells_array.compact.reduce(:+)
     end
 
     def live_or_die(status, sum)
@@ -40,8 +64,8 @@ module Game
       end
     end
 
-    def update(index, array)
-      live_or_die(array[index], neighbors_count(index))
+    def update(index)
+      live_or_die(@board_array[index], neighbors_count(index))
     end
 
     def print_board(board_array, iterator)
@@ -58,7 +82,6 @@ module Game
 end
 
 # tests
-sample_game = Game::Board.new(4, 4)
-p sample_game
+sample_game = Game::Board.new(5, 5)
 counter = 1.upto(4)
 counter.each { |iterator| sample_game.tick(iterator) }
