@@ -2,9 +2,6 @@
 module Game
   # class Board
   class Board
-    attr_accessor :board_array
-    attr_reader :width, :length, :cell_count
-
     def initialize(length, width)
       @width = width
       @length = length
@@ -17,15 +14,6 @@ module Game
       @board_array.map! { |index| @board_array[index] = rand.round }
       print_board(@board_array, 0)
     end
-
-    # def tick(iterator)
-    #   tmp = @board_array
-    #   tmp.map!.with_index do |_object, index|
-    #     update(index)
-    #   end
-    #   @board_array = tmp
-    #   print_board(@board_array, iterator)
-    # end
 
     def tick(iterator)
       tmp = @board_array
@@ -79,9 +67,9 @@ module Game
 
     def print_board(board, iterator)
       rows = []
-      row_counter = 0.upto(length - 1)
+      row_counter = 0.upto(@length - 1)
       row_counter.each do |counter|
-        row = board.slice(counter, width)
+        row = board.slice(counter, @width)
         rows.push(row)
       end
       p "Step: #{iterator}:"
