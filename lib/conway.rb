@@ -29,23 +29,6 @@ module Game
         @board_array.slice(index + @width - 1, 3).reduce(:+)
     end
 
-    # def build_neighbors_array(index)
-    #   neighbors_array = [@board_array[index - @width - 1],
-    #                      @board_array[index - @width],
-    #                      @board_array[index - @width + 1],
-    #                      @board_array[index - 1],
-    #                      @board_array[index + 1],
-    #                      @board_array[index + @width - 1],
-    #                      @board_array[index + @width],
-    #                      @board_array[index + @width + 1]]
-    #   final_neighbors_array = neighbors_array.compact
-    #   final_neighbors_array
-    # end
-    #
-    # def reduce_neighbors_array(neighbors_array)
-    #   neighbors_array.reduce(:+)
-    # end
-
     def live_or_die(status, sum)
       if (status == 0 && sum == 3) || (status == 1 && (sum == 2 || sum == 3))
         1
@@ -63,5 +46,5 @@ end
 # tests
 sample_game = Game::Board.new(4, 4)
 p sample_game
-counter = 1.upto(10)
+counter = 1.upto(9)
 counter.each { |iterator| sample_game.tick(iterator) }
