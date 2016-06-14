@@ -29,15 +29,9 @@ module Game
     end
 
     def get_neighbors_indices(index)
-      index_array = [index - @width - 1,
-                     index - @width,
-                     index - @width + 1,
-                     index - 1,
-                     index + 1,
-                     index + @width - 1,
-                     index + @width,
+      index_array = [index - @width - 1, index - @width, index - @width + 1,
+                     index - 1, index + 1, index + @width - 1, index + @width,
                      index + @width + 1]
-      p "index_array: #{index_array}"
       index_array
     end
 
@@ -47,20 +41,31 @@ module Game
       end
     end
 
-    def filter_edge(indices_array, current)
+    def filter_left_edge(indices_array)
       indices_array.keep_if do |index|
         !index.nil? &&
           index < @cell_count &&
           index >= 0 &&
-          (index - current).abs != (@width - 1)
+          (index % @width) != (@width - 1)
+      end
+    end
+
+    def filter_right_edge(indices_array)
+      indices_array.keep_if do |index|
+        !index.nil? &&
+          index < @cell_count &&
+          index >= 0 &&
+          (index % @width).abs != 0
       end
     end
 
     def filter_neighbor_indices(indices_array, current)
-      if current % @width != 0 && current % @width != @width - 1
+      if (current % @width != 0) && (current % @width != @width - 1)
         filtered_indices = filter_norm(indices_array)
+      elsif current % @width == 0
+        filtered_indices = filter_left_edge(indices_array)
       else
-        filtered_indices = filter_edge(indices_array, current)
+        filtered_indices = filter_right_edge(indices_array)
       end
       filtered_indices.uniq
     end
@@ -68,7 +73,6 @@ module Game
     def finalize_neighbors(final_cell_indices)
       final_cells = []
       final_cell_indices.each do |index|
-        p index
         final_cells.push(@board_array[index])
       end
       final_cells
@@ -78,8 +82,8 @@ module Game
       cell_indices = get_neighbors_indices(index)
       final_cell_indices = filter_neighbor_indices(cell_indices, index)
       final_cells_array = finalize_neighbors(final_cell_indices)
-      p "final_cell_indices: #{final_cell_indices}"
-      p "final_cells_array: #{final_cells_array}"
+      # p "final_cell_indices: #{final_cell_indices}"
+      # p "final_cells_array: #{final_cells_array}"
       final_cells_array.compact.reduce(:+)
     end
 
@@ -99,7 +103,7 @@ module Game
       rows = []
       row_counter = 0.upto(@length - 1)
       row_counter.each do |counter|
-        row = board.slice(counter, @width)
+        row = board.slice(counter * @width, @width)
         rows.push(row)
       end
       p "Step: #{iterator}:"
