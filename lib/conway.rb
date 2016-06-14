@@ -82,8 +82,6 @@ module Game
       cell_indices = get_neighbors_indices(index)
       final_cell_indices = filter_neighbor_indices(cell_indices, index)
       final_cells_array = finalize_neighbors(final_cell_indices)
-      # p "final_cell_indices: #{final_cell_indices}"
-      # p "final_cells_array: #{final_cells_array}"
       final_cells_array.compact.reduce(:+)
     end
 
@@ -113,6 +111,6 @@ module Game
 end
 
 # tests
-sample_game = Game::Board.new(3, 3)
-counter = 1.upto(2)
+sample_game = Game::Board.new(5, 5)
+counter = 1.upto(5)
 counter.each { |iterator| sample_game.tick(iterator) }
