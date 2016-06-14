@@ -37,7 +37,7 @@ module Game
                      index + @width - 1,
                      index + @width,
                      index + @width + 1]
-      # p "index_array: #{index_array}"
+      p "index_array: #{index_array}"
       index_array
     end
 
@@ -67,7 +67,8 @@ module Game
 
     def finalize_neighbors(final_cell_indices)
       final_cells = []
-      final_cell_indices.each_index do |index|
+      final_cell_indices.each do |index|
+        p index
         final_cells.push(@board_array[index])
       end
       final_cells
@@ -77,8 +78,8 @@ module Game
       cell_indices = get_neighbors_indices(index)
       final_cell_indices = filter_neighbor_indices(cell_indices, index)
       final_cells_array = finalize_neighbors(final_cell_indices)
-      # p "final_cell_indices: #{final_cell_indices}"
-      # p "final_cells_array: #{final_cells_array}"
+      p "final_cell_indices: #{final_cell_indices}"
+      p "final_cells_array: #{final_cells_array}"
       final_cells_array.compact.reduce(:+)
     end
 
@@ -109,5 +110,5 @@ end
 
 # tests
 sample_game = Game::Board.new(3, 3)
-counter = 1.upto(4)
+counter = 1.upto(2)
 counter.each { |iterator| sample_game.tick(iterator) }
