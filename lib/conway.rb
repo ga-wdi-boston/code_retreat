@@ -29,18 +29,45 @@ module Game
     end
 
     def get_neighbors_indices(index)
-      [index - @width - 1, index - @width, index - @width + 1,
-       index - 1, index + 1,
-       index + @width - 1, index + @width, index + @width + 1]
+      index_array = [index - @width - 1,
+                     index - @width,
+                     index - @width + 1,
+                     index - 1,
+                     index + 1,
+                     index + @width - 1,
+                     index + @width,
+                     index + @width + 1]
+      # p "index_array: #{index_array}"
+      index_array
     end
 
-    def filter_neighbor_indices(indices_array)
-      indices_array.keep_if { |index| index > 0 && index <= @cell_count }
+    def filter_norm(indices_array)
+      indices_array.keep_if do |index|
+        !index.nil? && index < @cell_count && index >= 0
+      end
+    end
+
+    def filter_edge(indices_array, current)
+      indices_array.keep_if do |index|
+        !index.nil? &&
+          index < @cell_count &&
+          index >= 0 &&
+          (index - current).abs != (@width - 1)
+      end
+    end
+
+    def filter_neighbor_indices(indices_array, current)
+      if current % @width != 0 && current % @width != @width - 1
+        filtered_indices = filter_norm(indices_array)
+      else
+        filtered_indices = filter_edge(indices_array, current)
+      end
+      filtered_indices.uniq
     end
 
     def finalize_neighbors(final_cell_indices)
       final_cells = []
-      final_cell_indices.each do |index|
+      final_cell_indices.each_index do |index|
         final_cells.push(@board_array[index])
       end
       final_cells
@@ -48,8 +75,10 @@ module Game
 
     def neighbors_count(index)
       cell_indices = get_neighbors_indices(index)
-      final_cell_indices = filter_neighbor_indices(cell_indices)
+      final_cell_indices = filter_neighbor_indices(cell_indices, index)
       final_cells_array = finalize_neighbors(final_cell_indices)
+      # p "final_cell_indices: #{final_cell_indices}"
+      # p "final_cells_array: #{final_cells_array}"
       final_cells_array.compact.reduce(:+)
     end
 
@@ -79,6 +108,6 @@ module Game
 end
 
 # tests
-sample_game = Game::Board.new(5, 5)
+sample_game = Game::Board.new(3, 3)
 counter = 1.upto(4)
 counter.each { |iterator| sample_game.tick(iterator) }
