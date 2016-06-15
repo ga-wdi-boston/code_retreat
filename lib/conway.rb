@@ -16,11 +16,11 @@ module Game
     end
 
     def tick(iterator)
-      tmp = @board_array
+      tmp = Array.new(@board_array)
       @board_array.each_index do |index|
         tmp[index] = update(index)
       end
-      @board_array = tmp
+      @board_array = Array.new(tmp)
       print_board(@board_array, iterator)
     end
 
