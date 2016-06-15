@@ -16,11 +16,11 @@ module Game
     end
 
     def tick(iterator)
-      tmp = Array.new(@board_array)
+      tmp = @board_array
       @board_array.each_index do |index|
         tmp[index] = update(index)
       end
-      @board_array = Array.new(tmp)
+      @board_array = tmp
       print_board(@board_array, iterator)
     end
 
@@ -60,7 +60,8 @@ module Game
     end
 
     def filter_neighbor_indices(indices_array, current)
-      if (current % @width != 0) && (current % @width != @width - 1)
+      if ((current % @width != 0) && (current % @width != @width - 1)) ||
+         @width < 3
         filtered_indices = filter_norm(indices_array)
       elsif current % @width == 0
         filtered_indices = filter_left_edge(indices_array)
@@ -111,6 +112,18 @@ module Game
 end
 
 # tests
+sample_game = Game::Board.new(2, 2)
+counter = 1.upto(3)
+counter.each { |iterator| sample_game.tick(iterator) }
+
+sample_game = Game::Board.new(3, 3)
+counter = 1.upto(3)
+counter.each { |iterator| sample_game.tick(iterator) }
+
+sample_game = Game::Board.new(4, 4)
+counter = 1.upto(3)
+counter.each { |iterator| sample_game.tick(iterator) }
+
 sample_game = Game::Board.new(5, 5)
-counter = 1.upto(5)
+counter = 1.upto(3)
 counter.each { |iterator| sample_game.tick(iterator) }
